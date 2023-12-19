@@ -15,25 +15,41 @@ const Chat = () => {
     scrollToBottom();
   }, [messages]);
 
-  const getChatGPTResponse = async (userMessage) => {
+  // const getChatGPTResponse = async (userMessage) => {
 
-  };
+  // };
   
-  
 
-  const sendMessage = async (event) => {
-    event.preventDefault();
-    if (input.trim()) {
-      const userMessage = { text: input, sender: 'user', timestamp: new Date() };
-      setMessages([...messages, userMessage]);
-      setInput('');
+const sendMessage = async (event) => {
+  event.preventDefault();
+  if (input.trim()) {
+    const userMessage = { text: input, sender: 'user', timestamp: new Date() };
+    setMessages([...messages, userMessage]);
+    setInput('');
 
-      const chatGPTResponse = await getChatGPTResponse(input);
-      if (chatGPTResponse) {
-        setMessages(prevMessages => [...prevMessages, { text: chatGPTResponse, sender: 'chatgpt', timestamp: new Date() }]);
+    try {
+      const response = await fetch('http://localhost:8000/api/chatgpt/', {  // Update this URL to your Django endpoint
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: input }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+
+      const data = await response.json();
+      if (data && data.reply) {
+        setMessages(prevMessages => [...prevMessages, { text: data.reply, sender: 'chatgpt', timestamp: new Date() }]);
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
     }
-  };
+  }
+};
+
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
