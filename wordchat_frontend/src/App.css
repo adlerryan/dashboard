@@ -1,57 +1,58 @@
-/* .App {
-  text-align: center;
+/* Main container of the app */
+.preload * {
+  visibility: hidden;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+  background-color: #222;
+  margin: 0;
+  padding: 0;
+  /* Removed margin-top from body */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.app-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  justify-content: stretch;
+  align-items: stretch;
+  background-color: #222;
+  /* height: calc(100vh - 20px); Adjust the height as needed */
+  /* margin-top: 20px; Space at the top */
+  overflow: hidden;
 }
 
-.App-link {
-  color: #61dafb;
+/* Containers inside the app-container */
+.chat-container, .right-container {
+  width: 98%;
+  height: 100%; /* Consider if this needs to be 100% */
+  overflow: hidden; /* Re-evaluate if necessary */
+  margin: 5px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-} */
-
-/* src/App.css */
-.App-header {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+/* Video container styling */
+.video-container {
+  height: auto; /* Consider changing to auto if the aspect ratio padding is used */
+  position: relative;
+  overflow: hidden;
 }
 
-#message-area {
-  height: 200px;
-  border: 1px solid #ccc;
-  margin-bottom: 10px;
-  padding: 10px;
-  overflow-y: auto;
+/* Wrapper for the video to maintain aspect ratio */
+.video-wrapper {
+  width: 100%;
+  height: 0;
+  padding-top: 56.25%; /* Aspect ratio padding */
+  position: relative;
+}
+
+/* Styling for the iframe (video) */
+iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 70%;
+  height: 70%;
+}
+
+.right-container {
+  /* Evaluate if this margin-top is needed */
+  margin-top: 10px;
 }

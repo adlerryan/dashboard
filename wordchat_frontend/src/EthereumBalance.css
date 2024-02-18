@@ -1,0 +1,89 @@
+/* Reset default margin and padding */
+* {
+    box-sizing: border-box;
+  }
+  
+  /* Full-screen container style */
+  .crypto-container {
+    height: auto;
+    max-height: 100vh;
+    overflow: hidden;
+    padding: 10px;
+    margin-top: 10px;
+    border: 2px solid #555; /* Slightly lighter border for contrast */
+    border-radius: 10px; 
+    background-color: #1a1a1a; /* Dark background */
+  }
+  
+  .crypto-header {
+    width: 100%;
+    padding: 10px;
+    margin: 0;
+    background-color: #333; /* Darker header for contrast */
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none; /* Prevent text selection */
+  }
+  
+  .crypto-header:hover {
+    background-color: #007bff;
+  }
+  .crypto-balance-area {
+    margin-top: 10px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #282828; /* Dark background for the table */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Adding subtle shadow */
+    color: #fff; 
+  }
+  
+  th, td {
+    padding: 12px 15px; /* More padding for a better look */
+    text-align: left;
+    border-bottom: 1px solid #444; /* Lighter border for each row */
+  }
+  
+  th {
+    background-color: #444; /* Dark header background */
+    color: #fff; /* Light text for headers */
+    font-size: 16px; /* Slightly larger font size for headers */
+  }
+  
+  tr:nth-child(even) {
+    background-color: #323232; /* Slightly lighter row for stripe effect */
+  }
+  
+  tr:hover {
+    background-color: #3a3a3a; /* Hover effect for rows */
+  }
+  
+  /* Style for links or additional elements if needed */
+  a {
+    color: #4c8bf5;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+
+  /* Add these styles to your CSS */
+.profit {
+  color: #00ff00; /* Green for profit */
+}
+
+.loss {
+  color: #ff0000; /* Red for loss */
+}
+
+.total-row {
+  font-weight: bold;
+}

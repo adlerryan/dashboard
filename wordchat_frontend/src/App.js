@@ -1,43 +1,44 @@
-// import logo from './logo.svg';
-// import './App.css';
-
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.js</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
-//   );
-// }
-
-// export default App;
-
-// src/App.js
-import React from 'react';
-import Chat from './Chat';
-import './App.css';
+import React, { useEffect } from 'react';
+import Chat from './Chat'; // Import your Chat component
+import EthereumBalance from './EthereumBalance'; // Import the EthereumBalance component
+import './App.css'; // Import your main CSS file
 
 function App() {
+  useEffect(() => {
+    // Function to remove the preload class
+    const handleLoad = () => {
+      document.body.classList.remove('preload');
+    };
+
+    // Add event listener for the load event
+    window.addEventListener('load', handleLoad);
+
+    // Clean up the event listener
+    return () => {
+      window.removeEventListener('load', handleLoad);
+    };
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
+    <div className="app-container">
+      <div className="chat-container">
         <Chat />
-      </header>
+      </div>
+      <div className="right-container">
+        <div className="video-wrapper">
+          <iframe
+            src="https://www.youtube.com/embed/QdBZY2fkU-0" // YouTube video URL
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen>
+          </iframe>
+        </div>
+        {/* Ethereum Balance Component */}
+        <EthereumBalance />
+      </div>
     </div>
   );
 }
 
 export default App;
-

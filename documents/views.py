@@ -32,11 +32,12 @@ def chatgpt_api(request):
         }
 
         # ChatGPT API URL and headers
-        print("API Key:", {settings.CHATGPT_API_KEY})
+        chatgpt_api_key = os.environ.get("CHATGPT_API_KEY")
+        if not chatgpt_api_key:
+            return JsonResponse({'error': 'API key not found'}, status=500)
         chatgpt_url = 'https://api.openai.com/v1/engines/davinci-codex/completions'
         headers = {
-            # 'Authorization': f'Bearer {os.environ.get("CHATGPT_API_KEY")}',
-            'Authorization': f'Bearer {settings.CHATGPT_API_KEY}',
+            'Authorization': f'Bearer {chatgpt_api_key}',
             'Content-Type': 'application/json'
         }
 
@@ -48,8 +49,9 @@ def chatgpt_api(request):
             chatgpt_response = response.json()
             return JsonResponse({'reply': chatgpt_response['choices'][0]['text']})
         else:
-            return JsonResponse({'error': 'Failed to get response from ChatGPT'}, status=response.status_code)
+            return JsonResponse({'error': f'Failed to get response from ChatGPT: {response.text}'}, status=response.status_code)
     except json.JSONDecodeError:
         return JsonResponse({'error': 'Invalid JSON'}, status=400)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+ 

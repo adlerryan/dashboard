@@ -1,10 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './Chat.css';
+import OpenAI from 'openai';
+
+const openai = new OpenAI({
+  apiKey: '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', // Replace with your actual API key
+  dangerouslyAllowBrowser: true
+});
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
-  const [document, setDocument] = useState(null);
+  const [isMinimized, setIsMinimized] = useState(false);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -15,77 +21,60 @@ const Chat = () => {
     scrollToBottom();
   }, [messages]);
 
-  // const getChatGPTResponse = async (userMessage) => {
-
-  // };
-  
-
-const sendMessage = async (event) => {
-  event.preventDefault();
-  if (input.trim()) {
-    const userMessage = { text: input, sender: 'user', timestamp: new Date() };
-    setMessages([...messages, userMessage]);
-    setInput('');
-
+  const sendChatGPTRequest = async (message) => {
     try {
-      const response = await fetch('http://localhost:8000/api/chatgpt/', {  // Update this URL to your Django endpoint
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message: input }),
+      const chatCompletion = await openai.chat.completions.create({
+        model: 'gpt-3.5-turbo',
+        messages: [{ role: 'user', content: message }],
       });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      if (data && data.reply) {
-        setMessages(prevMessages => [...prevMessages, { text: data.reply, sender: 'chatgpt', timestamp: new Date() }]);
-      }
+      return chatCompletion.choices[0].message.content;
     } catch (error) {
-      console.error('Error sending message:', error);
+      console.error('Error sending message to ChatGPT:', error);
+      return 'An error occurred while processing your request.';
     }
-  }
-};
+  };
 
+  const sendMessage = async (event) => {
+    event.preventDefault();
+    if (input.trim()) {
+      const userMessage = { text: input, sender: 'user', timestamp: new Date() };
+      setMessages([...messages, userMessage]);
+      setInput('');
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setDocument(file);
-      // Add any logic here for file handling
+      const chatGPTResponse = await sendChatGPTRequest(input);
+      setMessages(prevMessages => [...prevMessages, { text: chatGPTResponse, sender: 'chatgpt', timestamp: new Date() }]);
     }
+  };
+
+  const toggleMinimize = () => {
+    setIsMinimized(!isMinimized);
   };
 
   return (
     <div className="chat-container">
-      <h2 className="chat-title">Drycana</h2>
-      <div className="messages-area">
-        {messages.map((message, index) => (
-          <div key={index} className={`message-bubble ${message.sender}`}>
-            {message.text}
-          </div>
-        ))}
-        <div ref={messagesEndRef} />
+      <div className="chat-header" onClick={toggleMinimize}>
+        {isMinimized ? 'Open ChatGPT' : '↓'} {/* Toggle icon based on isMinimized state */}
       </div>
-      <form onSubmit={sendMessage} className="message-form">
-        <input
-          className="file-input"
-          type="file"
-          onChange={handleFileChange}
-          accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        />
-        <input
-          className="text-input"
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Type a message..."
-        />
-        <button className="send-button" type="submit">Send</button>
-      </form>
+      {!isMinimized && (
+        <div className="messages-area">
+          {messages.map((message, index) => (
+            <div key={index} className={`message-bubble ${message.sender === 'user' ? 'user' : 'chatgpt'}`}>
+              {message.text}
+            </div>
+          ))}
+          <div ref={messagesEndRef} />
+          <form onSubmit={sendMessage} className="message-form">
+            <input
+              className="text-input"
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Ask a question, powered by ChatGPT..."
+            />
+            <button className="send-button" type="submit">Send</button>
+          </form>
+        </div>
+      )}
     </div>
   );
 };

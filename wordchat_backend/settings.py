@@ -136,6 +136,10 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
-CHATGPT_API_KEY = 'here is my api_key'
+CHATGPT_API_KEY = "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"
 # Allow all origins for CORS (change this in production)
 CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',  # Add your frontend URL here
+]
