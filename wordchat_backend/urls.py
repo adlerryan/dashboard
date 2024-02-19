@@ -18,9 +18,20 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework.routers import DefaultRouter
+from .views import TrendingTopicViewSet
+from .views import trending_topics
+
+
+router = DefaultRouter()
+router.register(r'trending-topics', TrendingTopicViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path('', include(router.urls)),
     path('', include('documents.urls')),
+    path('api/trending-topics/', trending_topics, name='trending-topics'),
+    path('', include('wordchat_backend.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 
